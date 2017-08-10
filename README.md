@@ -11,12 +11,12 @@ from their time series.
 
 ## Examples
 
-### Linear trend estimation incuding jumps
+### Linear trend estimation including jumps
 Dates of jumps have to be known or derived from Bernese5.2 file (FODITS output) using Options --> FOD2DISCO 
 in TSPRO program.
 ![alt text](docs/pics/bbys_fit.png)
 
-### Trend estimation incuding yearly period
+### Trend estimation including yearly period
 ![alt text](docs/pics/sksk.png)
 
 ### Horizontal velocities based on permanent GNSS stations
