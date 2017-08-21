@@ -3,9 +3,9 @@ Simple GUI for estimation of horizontal and vertical velocities of GNSS stations
 from their time series.
 
 ## How does it work?
-* load disco file - your file with dates of discontinuities i.e. inputs/20170614.dst
-* load exclusion file - time intervals for exclusion i.e. inputs/custom.excl
-* select Data directory - directory with all stations' coordinates i.e. inputs/time_series_20170614/
+* load disco file - your file with dates of discontinuities e.g. inputs/20170614.dst
+* load exclusion file - time intervals for exclusion e.g. inputs/custom.excl
+* select Data directory - directory with all stations' coordinates e.g. inputs/time_series_20170614/
 * choose estimation options
 * compute one/all stations
 
