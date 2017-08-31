@@ -950,6 +950,8 @@ def plot_velocities(COORS_FILE, SHP_FILE, stations_velos, stations_velos_SDs, el
     # Vertical velos
     plot_SVK(SHP_FILE, draw=True)
     plt.title("Vertical velocities")
+    plt.xlabel('Longitude [deg]')
+    plt.ylabel('Latitude [deg]')
     if ellipse:
         quiver_scale_up = 0.003
         Q = plt.quiver(df['la'].values, df['fi'].values, 0, df['v_u'].values, ups.values,
