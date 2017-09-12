@@ -1,0 +1,1 @@
+value_id,date(YYYYMMDD),year(YYYY.YYYYY),gps_week,n(m),n_std_dev(m),e(m),e_std_dev(m),u(m),u_std_dev(m),x(m),x_std_dev(m),y(m),y_std_dev(m),z(m),z_std_dev(m),coord_type
