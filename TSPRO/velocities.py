@@ -752,6 +752,37 @@ def plot_error_ellipse(ax, center, sigma_x, sigma_y):
     ax.add_artist(ell)
 
 
+def get_velos_df(COORS_FILE, stations_velos, stations_velos_SDs):
+    ''''Save station coordinates, velocities and SDs to csv file
+    '''
+    def long2short(value):
+        deg = int(value[:2])
+        mins = int(value[3:5])
+        seks = float(value[6:-1])
+        return deg + mins/60 + seks/3600
+
+
+    def velos2df(row, velos, coor='n'):
+        station = row['station']
+        if station in velos:
+            result = velos[station][coor]
+        else:
+            result = np.nan
+        return result
+
+    df = pd.read_csv(COORS_FILE, delim_whitespace=True)
+    df['fi'] = df['fi'].apply(long2short)
+    df['la'] = df['la'].apply(long2short)
+    df['v_n'] = df.apply(velos2df, axis=1, args=(stations_velos,), coor='n')
+    df['v_e'] = df.apply(velos2df, axis=1, args=(stations_velos,), coor='e')
+    df['v_u'] = df.apply(velos2df, axis=1, args=(stations_velos,), coor='u')
+    df['Sv_n'] = df.apply(velos2df, axis=1, args=(stations_velos_SDs,), coor='n')
+    df['Sv_e'] = df.apply(velos2df, axis=1, args=(stations_velos_SDs,), coor='e')
+    df['Sv_u'] = df.apply(velos2df, axis=1, args=(stations_velos_SDs,), coor='u')
+    return df
+
+
+
 def get_final_velocities(DST_FILE, EXCL_FILE, TS_DIR, plot_each_fit=False, plot_each_outliers=False,
                         period_year=True, stat=None, outlier_trash=3, fit_fullTS=True, 
                         weeks_tresh_part=65, weeks_tresh_all=156, plot_each_res=False, use_weights=True):
@@ -862,32 +893,8 @@ def get_final_velocities(DST_FILE, EXCL_FILE, TS_DIR, plot_each_fit=False, plot_
 
 
 def plot_velocities(COORS_FILE, SHP_FILE, stations_velos, stations_velos_SDs, ellipse=True):
-
-    def long2short(value):
-        deg = int(value[:2])
-        mins = int(value[3:5])
-        seks = float(value[6:-1])
-        return deg + mins/60 + seks/3600
-
-
-    def velos2df(row, velos, coor='n'):
-        station = row['station']
-        if station in velos:
-            result = velos[station][coor]
-        else:
-            result = np.nan
-        return result
-
-    df = pd.read_csv(COORS_FILE, delim_whitespace=True)
-    df['fi'] = df['fi'].apply(long2short)
-    df['la'] = df['la'].apply(long2short)
-    df['v_n'] = df.apply(velos2df, axis=1, args=(stations_velos,), coor='n')
-    df['v_e'] = df.apply(velos2df, axis=1, args=(stations_velos,), coor='e')
-    df['v_u'] = df.apply(velos2df, axis=1, args=(stations_velos,), coor='u')
-    df['Sv_n'] = df.apply(velos2df, axis=1, args=(stations_velos_SDs,), coor='n')
-    df['Sv_e'] = df.apply(velos2df, axis=1, args=(stations_velos_SDs,), coor='e')
-    df['Sv_u'] = df.apply(velos2df, axis=1, args=(stations_velos_SDs,), coor='u')
-
+    ''' Plot horizontal and vertical velocities'''
+    df = get_velos_df(COORS_FILE, stations_velos, stations_velos_SDs)
     # colors based on direction (Hz velos)
     angles = np.arctan2(df['v_n'].values, df['v_e'].values)
     ang = pd.Series(angles)
@@ -996,6 +1003,12 @@ if __name__ == '__main__':
     stations_velos, SDs, stations_dfres = get_final_velocities(DST_FILE, EXCL_FILE, TS_DIR, plot_each_fit=False, 
                                     plot_each_outliers=False, period_year=True, stat=None, fit_fullTS=True, 
                                     outlier_trash=3, plot_each_res=False, use_weights=False)
+    # save results (velos, SDs, ...)
+    # df_velos = get_velos_df(COORS_FILE, stations_velos, SDs)
+    # df_velos = df_velos.dropna()
+    # df_velos = df_velos.round(8)
+    # df_velos.to_csv('final_velos.csv', index=False)
+
     # save residuals
     # df_res_all = pd.concat(list(stations_dfres.values()))
     # df_res_all.to_csv('residuals.csv', float_format='%.8f')

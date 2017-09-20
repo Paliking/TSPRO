@@ -292,10 +292,14 @@ class StartPage(Frame):
 
         def callback_res():
             self.savepath = asksaveasfilename(defaultextension=".csv")
-            print(self.savepath)
             self.label_resfile['text'] = self.savepath
 
+        def callback_velo():
+            self.savepath_velo = asksaveasfilename(defaultextension=".csv")
+            self.label_velofile['text'] = self.savepath_velo
+
         self.savepath = ''
+        self.savepath_velo = ''
 
         frame0 = Frame(self, borderwidth=1, relief=GROOVE)
         frame0.pack(fill=X)
@@ -307,6 +311,13 @@ class StartPage(Frame):
         b_save.pack(fill=X, side=LEFT, padx=5)
         self.label_resfile = Label(frame01, text="No file selected", anchor=W, bg=COLOR_PATHS)
         self.label_resfile.pack(fill=X, padx=5, expand=True)
+
+        frame02 = Frame(frame0)
+        frame02.pack(fill=X)
+        b_save_velos = Button(frame02, text='Save velocities as', command=callback_velo, width=14)
+        b_save_velos.pack(fill=X, side=LEFT, padx=5)
+        self.label_velofile = Label(frame02, text="No file selected", anchor=W, bg=COLOR_PATHS)
+        self.label_velofile.pack(fill=X, padx=5, expand=True)
 
         # for free line only
         frame3 = Frame(frame0)
@@ -442,9 +453,14 @@ class StartPage(Frame):
         if len(residuals) > 0 and len(save_path) > 0:
             df_res_all = pd.concat(list(residuals.values()))
             df_res_all.to_csv(save_path, float_format='%.8f')
-        
-           
 
+        # save velocities to csv
+        if len(self.savepath_velo) > 0:
+            df_velos = velocities.get_velos_df(COORS_FILE, stations_velos, SDs)
+            df_velos = df_velos.dropna()
+            df_velos.to_csv(self.savepath_velo, index=False, float_format='%.8f')
+        
+        
 def main():
   
     # root.geometry("250x150")
