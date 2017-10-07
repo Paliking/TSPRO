@@ -1,7 +1,12 @@
 import os
+import sys
 
 
-MODULES_DIR = os.path.dirname(os.path.abspath(__file__))
+if getattr(sys, 'frozen', False):
+    MODULES_DIR = os.path.dirname(sys.executable)
+elif __file__:
+    MODULES_DIR = os.path.dirname(os.path.abspath(__file__))
+    
 PROJECT_DIR = os.path.dirname(MODULES_DIR)
 
 INPUTS = os.path.join(PROJECT_DIR, 'inputs')
